@@ -1,0 +1,45 @@
+#ifndef   _PURRFECT_ENGINE_RENDERER_ENUMS_HPP_
+#define   _PURRFECT_ENGINE_RENDERER_ENUMS_HPP_
+
+namespace PurrfectEngine {
+namespace renderer {
+  
+  enum class Format {
+    GRAYSCALE  = PURRR_FORMAT_GRAYSCALE,
+    GRAY_ALPHA = PURRR_FORMAT_GRAY_ALPHA,
+    RGBA8U     = PURRR_FORMAT_RGBA8U,
+    RGBA8RGB   = PURRR_FORMAT_RGBA8RGB,
+    BGRA8U     = PURRR_FORMAT_BGRA8U,
+    BGRA8RGB   = PURRR_FORMAT_BGRA8RGB,
+    RGBA16F    = PURRR_FORMAT_RGBA16F,
+    RG32F      = PURRR_FORMAT_RG32F,
+    RGB32F     = PURRR_FORMAT_RGB32F,
+    RGBA32F    = PURRR_FORMAT_RGBA32F,
+    RGBA64F    = PURRR_FORMAT_RGBA64F,
+  };
+
+  uint32_t formatSize(Format format);
+
+  enum class BufferType {
+    Uniform = PURRR_BUFFER_TYPE_UNIFORM,
+    Storage = PURRR_BUFFER_TYPE_STORAGE,
+    Vertex  = PURRR_BUFFER_TYPE_VERTEX,
+    Index   = PURRR_BUFFER_TYPE_INDEX,
+  };
+
+  enum class DescriptorType {
+    Texture       = PURRR_DESCRIPTOR_TYPE_TEXTURE,
+    UniformBuffer = PURRR_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+    StorageBuffer = PURRR_DESCRIPTOR_TYPE_STORAGE_BUFFER,
+  };
+
+  enum class ShaderType {
+    Vertex   = PURRR_SHADER_TYPE_VERTEX,
+    Fragment = PURRR_SHADER_TYPE_FRAGMENT,
+    Compute  = PURRR_SHADER_TYPE_COMPUTE,
+  };
+
+}
+}
+
+#endif // _PURRFECT_ENGINE_RENDERER_ENUMS_HPP_

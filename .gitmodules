@@ -1,0 +1,21 @@
+[submodule "deps/purrr"]
+	path = deps/purrr
+	url = https://github.com/ClawsoftSolutions/purrr
+[submodule "deps/stb"]
+	path = deps/stb
+	url = https://github.com/nothings/stb
+[submodule "deps/glm"]
+	path = deps/glm
+	url = https://github.com/g-truc/glm.git
+[submodule "deps/openal-soft"]
+	path = deps/openal-soft
+	url = https://github.com/kcat/openal-soft
+[submodule "deps/libsndfile"]
+	path = deps/libsndfile
+	url = https://github.com/libsndfile/libsndfile
+[submodule "deps/minimp3"]
+	path = deps/minimp3
+	url = git@github.com:lieff/minimp3.git
+[submodule "deps/entt"]
+	path = deps/entt
+	url = git@github.com:skypjack/entt.git
