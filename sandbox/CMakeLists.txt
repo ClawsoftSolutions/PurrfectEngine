@@ -3,23 +3,16 @@ add_executable(sandbox ${SOURCES})
 target_link_libraries(sandbox PRIVATE PurrfectEngine)
 target_include_directories(sandbox PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-# https://stackoverflow.com/a/71317698
 add_custom_target(shaders)
 
-set(HLSL_SHADER_FILES vertex.hlsl fragment.hlsl)
+set(GLSL_SHADER_FILES vertex.vert fragment.frag)
 
-set_source_files_properties(vertex.hlsl PROPERTIES ShaderType "vs")
-set_source_files_properties(fragment.hlsl PROPERTIES ShaderType "ps")
-set_source_files_properties(${HLSL_SHADER_FILES} PROPERTIES ShaderModel "6_0")
-
-foreach(FILE ${HLSL_SHADER_FILES})
+foreach(FILE ${GLSL_SHADER_FILES})
   get_filename_component(FILE_WE ${FILE} NAME_WE)
-  get_source_file_property(shadertype ${FILE} ShaderType)
-  get_source_file_property(shadermodel ${FILE} ShaderModel)
   add_custom_command(TARGET shaders
-                     COMMAND dxc.exe -spirv -E main -T ${shadertype}_${shadermodel} $<IF:$<CONFIG:DEBUG>,-Od,-O1> -Fo ${CMAKE_CURRENT_BINARY_DIR}/${FILE_WE}.spv assets/shaders/${FILE}
+                     COMMAND glslangValidator -V -o ${CMAKE_CURRENT_BINARY_DIR}/${FILE_WE}.spv ${CMAKE_CURRENT_SOURCE_DIR}/assets/shaders/${FILE}
                      MAIN_DEPENDENCY ${FILE}
-                     COMMENT "HLSL ${FILE}"
+                     COMMENT "Compiling GLSL ${FILE} to SPIR-V"
                      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
                      VERBATIM)
 endforeach(FILE)
