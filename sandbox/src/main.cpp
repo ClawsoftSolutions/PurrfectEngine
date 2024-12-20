@@ -1,98 +1,123 @@
 #define PURRFECT_ENGINE_ENTRY
 #include <PurrfectEngine/PurrfectEngine.hpp>
+#include <iostream>
 
 using namespace PurrfectEngine;
 
 class SandboxRenderer : public Renderer {
 public:
-  SandboxRenderer(Window *window)
-    : Renderer(window)
-  {}
+    SandboxRenderer(Window* window)
+        : Renderer(window)
+    {}
 
-  bool initialize() {
-    {
-      std::vector<renderer::Shader*> shaders{};
-      shaders.reserve(2);
-      shaders.push_back(new renderer::Shader(this, renderer::ShaderType::Vertex, "./vertex.spv"));
-      shaders.push_back(new renderer::Shader(this, renderer::ShaderType::Fragment, "./fragment.spv"));
+    bool initialize() {
+        {
+            std::vector<renderer::Shader*> shaders{};
+            shaders.reserve(2);
+            shaders.push_back(new renderer::Shader(this, renderer::ShaderType::Vertex, "./vertex.spv"));
+            shaders.push_back(new renderer::Shader(this, renderer::ShaderType::Fragment, "./fragment.spv"));
 
-      renderer::PipelineCreateInfo createInfo{
-        .descriptor = mPipelineDescriptor,
-        .shaders = shaders,
-        .vertexAttributes = { renderer::Format::RG32F, renderer::Format::RG32F },
-        .descriptorSlots = {},
-      };
+            renderer::PipelineCreateInfo createInfo{
+                .descriptor = mPipelineDescriptor,
+                .shaders = shaders,
+                .vertexAttributes = { renderer::Format::RG32F, renderer::Format::RG32F },
+                .descriptorSlots = {},
+            };
 
-      mPipeline = new renderer::Pipeline(this, createInfo);
+            mPipeline = new renderer::Pipeline(this, createInfo);
 
-      for (auto &shader : shaders) delete shader;
+            for (auto& shader : shaders) delete shader;
+        }
+
+        return true;
     }
 
-    return true;
-  }
-
-  bool update() {
-    return true;
-  }
-
-  bool render() {
-    begin();
-
-    {
-      bind_render_target(this, mRenderTarget);
-      bind(mPipeline);
-
-      draw(3);
+    bool update() {
+        return true;
     }
 
-    end();
+    bool render() {
+        begin();
 
-    return true;
-  }
+        {
+            bind_render_target(this, mRenderTarget);
+            bind(mPipeline);
 
-  void resize() {
+            draw(3);
+        }
 
-  }
+        end();
+
+        return true;
+    }
+
+    void resize() {}
+
 private:
-  renderer::Pipeline *mPipeline = nullptr;
+    renderer::Pipeline* mPipeline = nullptr;
 };
 
 class SandboxApp : public Application {
 public:
-  SandboxApp()
-    : Application(), mWindow(new Window("PurrfectEngine Sandbox", 1920, 1080)), mRenderer(new SandboxRenderer(mWindow))
-  {}
+    SandboxApp()
+        : Application(), mWindow(new Window("PurrfectEngine Sandbox", 1920, 1080)), mRenderer(new SandboxRenderer(mWindow))
+    {}
 
-  bool initialize() {
-    mRenderer->init();
+    bool initialize() {
+        mRenderer->init();
+        WindowRendererMap::add(mWindow->getWindow(), mRenderer->getRenderer());
 
-    return true;
-  }
+        mEventQueue = new EventQueue();
+        mDispatcher = new EventDispatcher();
+        mCallbacks = new EventsCallbacks(mEventQueue);
 
-  bool update() {
-    if (!mRenderer->update()) return false;
-    if (!mRenderer->render()) return false;
-    purrr_poll_events();
+        mCallbacks->registerCallbacks(mWindow->getWindow());
 
-    return true;
-  }
+        mDispatcher->subscribe<KeyPressEvent>(1, [](const KeyPressEvent& event) {
+            std::cout << "Key pressed: " << event.getKeyCode() << std::endl;
+            });
 
-  void cleanup() {
-    mRenderer->destroy();
-    delete mRenderer;
-    delete mWindow;
-  }
+        mDispatcher->subscribe<Event>(1, [](const Event& event) {
+            std::cout << "General event received: " << event.getName() << std::endl;
+            });
 
-  bool isRunning() const { return !mWindow->shouldClose(); }
+        return true;
+    }
+
+    bool update() {
+        if (!mRenderer->update()) return false;
+        if (!mRenderer->render()) return false;
+        purrr_poll_events();
+
+        mEventQueue->process(*mDispatcher);
+
+        return true;
+    }
+
+    void cleanup() {
+        WindowRendererMap::remove(mWindow->getWindow());
+        mRenderer->destroy();
+        delete mRenderer;
+        delete mWindow;
+
+        delete mEventQueue;
+        delete mDispatcher;
+        delete mCallbacks;
+    }
+
+    bool isRunning() const { return !mWindow->shouldClose(); }
+
 private:
-  Window *mWindow = nullptr;
-  SandboxRenderer *mRenderer = nullptr;
+    Window* mWindow = nullptr;
+    SandboxRenderer* mRenderer = nullptr;
+
+    EventQueue* mEventQueue = nullptr;
+    EventDispatcher* mDispatcher = nullptr;
+    EventsCallbacks* mCallbacks = nullptr;
 };
 
 namespace PurrfectEngine {
-
-  Application *CreateApplication(int argc, char **argv) {
-    return new SandboxApp();
-  }
-
+    Application* CreateApplication(int argc, char** argv) {
+        return new SandboxApp();
+    }
 }

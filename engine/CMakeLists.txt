@@ -1,6 +1,6 @@
 file(GLOB_RECURSE SOURCES "src/**.cpp" "include/**.hpp")
 
-add_library(PurrfectEngine STATIC ${SOURCES})
+add_library(PurrfectEngine STATIC ${SOURCES} "src/utils/WindowRendererMap.cpp")
 
 target_include_directories(PurrfectEngine
   PUBLIC
