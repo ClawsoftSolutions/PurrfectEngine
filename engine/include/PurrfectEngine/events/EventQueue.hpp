@@ -1,5 +1,5 @@
-#ifndef PURRFECT_ENGINE_EVENTS_EVENT_QUEUE_HPP
-#define PURRFECT_ENGINE_EVENTS_EVENT_QUEUE_HPP
+#ifndef _PURRFECT_ENGINE_EVENTS_EVENT_QUEUE_HPP
+#define _PURRFECT_ENGINE_EVENTS_EVENT_QUEUE_HPP
 
 #include "EventDispatcher.hpp"
 #include <queue>
@@ -7,27 +7,20 @@
 #include <memory>
 
 namespace PurrfectEngine {
-    class EventQueue {
-        std::queue<std::unique_ptr<Event>> events;
-        std::mutex eventMutex;
 
-    public:
-        EventQueue() {};
-        ~EventQueue() {};
+  class EventQueue {
+  public:
+    EventQueue() = default;
+    EventQueue(EventQueue &)  = delete;
+    EventQueue(EventQueue &&) = delete;
 
-        void enqueue(std::unique_ptr<Event> event) {
-            std::lock_guard<std::mutex> lock(eventMutex);
-            events.push(std::move(event));
-        }
+    void enqueue(Event *event);
+    void process(EventDispatcher &dispatcher);
+  private:
+    std::queue<Event*> mEvents;
+    std::mutex mEventMutex;
+  };
 
-        void process(EventDispatcher& dispatcher) {
-            std::lock_guard<std::mutex> lock(eventMutex);
-            while (!events.empty()) {
-                dispatcher.dispatch(*events.front());
-                events.pop();
-            }
-        }
-    };
 }
 
-#endif PURRFECT_ENGINE_EVENTS_EVENT_QUEUE_HPP
+#endif // _PURRFECT_ENGINE_EVENTS_EVENT_QUEUE_HPP

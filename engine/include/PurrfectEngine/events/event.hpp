@@ -1,50 +1,47 @@
-#ifndef _PURRFECT_ENGINE_EVENTS_EVENT_HPP_
-#define _PURRFECT_ENGINE_EVENTS_EVENT_HPP_
+#ifndef   _PURRFECT_ENGINE_EVENTS_EVENT_HPP_
+#define   _PURRFECT_ENGINE_EVENTS_EVENT_HPP_
 
 namespace PurrfectEngine {
-    enum class EventType {
-        WindowClose,
-        KeyPress,
-        MouseClick,
-    };
 
-    class Event {
-        bool handled = false;
+  class Event {
+  public:
+    virtual ~Event() = default;
 
-    public:
-        virtual ~Event() = default;
-        virtual EventType getType() const = 0;
-        virtual const char* getName() const = 0;
+    virtual const char *getName() const = 0;
 
-        void setHandled(bool isHandled) { handled = isHandled; }
-        bool isHandled() const { return handled; }
-    };
+    inline void setHandled(bool handled) { mHandled = handled; }
+    inline bool isHandled() const { return mHandled; }
+  private:
+    bool mHandled = false;
+  };
 
-    class KeyPressEvent : public Event {
-        int keyCode;
+  class KeyPressEvent : public Event {
+  public:
+    inline explicit KeyPressEvent(int key)
+      : mKeyCode(key) {}
 
-    public:
-        explicit KeyPressEvent(int key) : keyCode(key) {}
-        EventType getType() const override { return EventType::KeyPress; }
-        const char* getName() const override { return "KeyPressEvent"; }
-        int getKeyCode() const { return keyCode; }
-    };
+    inline const char *getName() const override { return "KeyPressEvent"; }
+    inline int getKeyCode() const { return mKeyCode; }
+  private:
+    int mKeyCode;
+  };
 
-    class MouseClickEvent : public Event {
-        int button;
+  class MouseClickEvent : public Event {
+  public:
+    inline explicit MouseClickEvent(int button)
+      : mButton(button) {}
 
-    public:
-        explicit MouseClickEvent(int button) : button(button) {}
-        EventType getType() const override { return EventType::MouseClick; }
-        const char* getName() const override { return "MouseClickEvent"; }
-        int getButton() const { return button; }
-    };
+    const char *getName() const override { return "MouseClickEvent"; }
+    int getButton() const { return mButton; }
+  private:
+    int mButton;
+  };
 
-    class WindowCloseEvent : public Event {
-    public:
-        EventType getType() const override { return EventType::WindowClose; }
-        const char* getName() const override { return "WindowCloseEvent"; }
-    };
+  class WindowCloseEvent : public Event {
+  public:
+    const char *getName() const override { return "WindowCloseEvent"; }
+  };
+
 }
 
-#endif // !_PURRFECT_ENGINE_EVENTS_EVENT_HPP_
+#endif // _PURRFECT_ENGINE_EVENTS_EVENT_HPP_

@@ -56,9 +56,8 @@ namespace PurrfectEngine {
 // Events:
 
 #include "events/event.hpp"
-#include "events/EventDispatcher.hpp"
-#include "events/EventQueue.hpp"
-#include "events/EventCallbacks.hpp"
+#include "events/eventDispatcher.hpp"
+#include "events/eventQueue.hpp"
 
 // Renderers:
 // #include "renderers/renderer2D.hpp"

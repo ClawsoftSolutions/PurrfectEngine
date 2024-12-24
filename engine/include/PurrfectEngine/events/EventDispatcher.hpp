@@ -1,49 +1,50 @@
-#ifndef PURRFECT_ENGINE_EVENTS_EVENT_DISPATCHER_HPP
-#define PURRFECT_ENGINE_EVENTS_EVENT_DISPATCHER_HPP
+#ifndef   _PURRFECT_ENGINE_EVENTS_EVENT_DISPATCHER_HPP_
+#define   _PURRFECT_ENGINE_EVENTS_EVENT_DISPATCHER_HPP_
 
-#include "event.hpp"
-#include <unordered_map>
-#include <vector>
-#include <functional>
 #include <typeindex>
-#include <algorithm>
 
 namespace PurrfectEngine {
-    class EventDispatcher {
-        struct Listener {
-            int priority;
-            std::function<void(const Event&)> callback;
-        };
 
-        std::unordered_map<std::type_index, std::vector<Listener>> listeners;
-
-    public:
-        EventDispatcher() {};
-        ~EventDispatcher() {};
-
-        template <typename T>
-        void subscribe(int priority, std::function<void(const T&)> listener) {
-            auto& vec = listeners[typeid(T)];
-            vec.push_back({ priority, [listener](const Event& e) {
-                listener(static_cast<const T&>(e));
-            } });
-
-            std::sort(vec.begin(), vec.end(), [](const Listener& a, const Listener& b) {
-                return a.priority > b.priority;
-                });
-        }
-
-        template <typename T>
-        void dispatch(const T& event) {
-            auto it = listeners.find(typeid(T));
-            if (it != listeners.end()) {
-                for (auto& listener : it->second) {
-                    listener.callback(event);
-                    if (event.isHandled()) break;
-                }
-            }
-        }
+  class EventDispatcher {
+    struct Listener {
+      int priority;
+      std::function<void(const Event&)> callback;
     };
+  public:
+    EventDispatcher() = default;
+
+    template <typename T>
+    inline void subscribe(int priority, std::function<void(const T&)> listener) {
+      auto& vec = mListeners[typeid(T)];
+
+      auto it = vec.begin();
+      while (it < vec.end()) {
+        if ((*it).priority < priority) break;
+        else ++it;
+      }
+
+      vec.insert(it, Listener{
+        priority,
+        [listener](const Event& e) {
+          listener(dynamic_cast<const T&>(e));
+        }
+      });
+    }
+
+    template <typename T>
+    inline void dispatch(const T& event) {
+      auto it = mListeners.find(typeid(T));
+      if (it != mListeners.end()) {
+        for (auto& listener : it->second) {
+          listener.callback(event);
+          if (event.isHandled()) break;
+        }
+      }
+    }
+  private:
+    std::unordered_map<std::type_index, std::vector<Listener>> mListeners;
+  };
+
 }
 
-#endif // !PURRFECT_ENGINE_EVENTS_EVENT_DISPATCHER_HPP
+#endif // _PURRFECT_ENGINE_EVENTS_EVENT_DISPATCHER_HPP_
