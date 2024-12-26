@@ -37,9 +37,26 @@ namespace PurrfectEngine {
     int mButton;
   };
 
+  class CursorMoveEvent : public Event {
+  public:
+    inline explicit CursorMoveEvent(double xpos, double ypos)
+      : mXpos(xpos), mYpos(ypos) {}
+
+    const char *getName() const override { return "CursorMoveEvent"; }
+    double getPosX() const { return mXpos; }
+    double getPosY() const { return mYpos; }
+  private:
+    double mXpos, mYpos;
+  };
+
   class WindowCloseEvent : public Event {
   public:
     const char *getName() const override { return "WindowCloseEvent"; }
+
+    bool isCancelled() const { return mCancelled; }
+    void setCancelled(bool cancelled) { mCancelled = cancelled; }
+  private:
+    bool mCancelled = false;
   };
 
 }

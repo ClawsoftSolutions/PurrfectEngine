@@ -74,6 +74,8 @@ public:
       printf("%s fired!\n", event.getName());
     });
 
+    mWindow->subscribe(&mEventQueue);
+
     return true;
   }
 

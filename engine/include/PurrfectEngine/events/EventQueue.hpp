@@ -1,7 +1,6 @@
 #ifndef _PURRFECT_ENGINE_EVENTS_EVENT_QUEUE_HPP
 #define _PURRFECT_ENGINE_EVENTS_EVENT_QUEUE_HPP
 
-#include "EventDispatcher.hpp"
 #include <queue>
 #include <mutex>
 #include <memory>
