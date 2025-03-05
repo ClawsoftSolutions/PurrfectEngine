@@ -85,11 +85,12 @@ namespace PurrfectEngine {
       while (index <= m_count) m_items[index] = m_items[++index];
     }
 
-    void remove(size_t begin, size_t end) {
-      if (begin < end) throw CodeException(Code::OutOfBounds);
-      if (end >= m_count) throw CodeException(Code::OutOfBounds);
-      m_count -= end-begin;
-      while (end <= m_count) m_items[begin++] = m_items[++end];
+    void remove(size_t begin, size_t count) {
+      if (!count) return;
+      if (begin >= m_count) throw CodeException(Code::OutOfBounds);
+      m_count -= count;
+      for (size_t i = 0; i < count; ++i)
+        m_items[begin] = m_items[count+(begin++)];
     }
 
     // Perfect if you don't care about the order (not recommended by dictators)
