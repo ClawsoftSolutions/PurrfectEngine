@@ -81,13 +81,14 @@ namespace PurrfectEngine {
     void clear() { m_count = 0; }
 
     void remove(size_t index) {
-      if (index >= --m_count) throw CodeException(Code::OutOfBounds);
+      if (index > --m_count) throw CodeException(Code::OutOfBounds);
       while (index <= m_count) m_items[index] = m_items[++index];
     }
 
     void remove(size_t begin, size_t end) {
       if (begin < end) throw CodeException(Code::OutOfBounds);
-      if (end >= --m_count) throw CodeException(Code::OutOfBounds);
+      if (end >= m_count) throw CodeException(Code::OutOfBounds);
+      m_count -= end-begin;
       while (end <= m_count) m_items[begin++] = m_items[++end];
     }
 
