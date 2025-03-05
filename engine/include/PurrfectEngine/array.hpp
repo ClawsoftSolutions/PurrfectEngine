@@ -66,14 +66,14 @@ namespace PurrfectEngine {
     }
 
     void append(const T &value = T{}) {
-      if (m_count >= m_capacity) reserve(m_capacity); // Double the capacity
+      if (m_count >= m_capacity) reserve(m_capacity?m_capacity:16); // Double the capacity
       new (&m_items[m_count]) T();
       m_items[m_count++] = value;
     }
 
     template <typename... Args>
     T &emplace(Args &&...args) {
-      if (m_count >= m_capacity) reserve(m_capacity); // Double the capacity
+      if (m_count >= m_capacity) reserve(m_capacity?m_capacity:16); // Double the capacity
       new (&m_items[m_count]) T(args...);
       return m_items[m_count++];
     }
@@ -123,6 +123,22 @@ namespace PurrfectEngine {
     constexpr const T &operator [](const size_t &index) const {
       if (index >= m_count) throw CodeException(Code::OutOfBounds);
       return m_items[index];
+    }
+
+    constexpr bool has(const T &value) const {
+      for (size_t i = 0; i < m_count; ++i)
+        if (m_items[i] == value) return true;
+      return false;
+    }
+
+    constexpr T &front() const {
+      if (!m_count) throw CodeException(Code::OutOfBounds);
+      return m_items[0];
+    }
+
+    constexpr T &back() const {
+      if (!m_count) throw CodeException(Code::OutOfBounds);
+      return m_items[m_count-1];
     }
 
     constexpr size_t size() const { return m_count; }

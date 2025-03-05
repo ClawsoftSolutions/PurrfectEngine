@@ -8,13 +8,14 @@
 
 namespace PurrfectEngine {
 
-  class Code {
+  class Code { // https://stackoverflow.com/a/53284026
   public:
     enum Value : int32_t {
       Success = 0,
       BuyMoreRAM = -1, // Tsoding reference
       OutOfBounds = -2,
       Unreachable = -3,
+      DeadEntity = -4,
     };
   public:
     constexpr Code(const Value &value)

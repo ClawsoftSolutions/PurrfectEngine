@@ -13,6 +13,7 @@ namespace PurrfectEngine {
     case Success: return "Success";
     case BuyMoreRAM: return "Out of memory";
     case OutOfBounds: return "Out of bounds";
+    case DeadEntity: return "Dead entity";
     }
     
     throw CodeException(Unreachable);
