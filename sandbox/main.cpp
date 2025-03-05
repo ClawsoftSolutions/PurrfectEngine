@@ -51,7 +51,7 @@ int main(void) {
   ecs.emplace<C>(entityC, 'C');
   ecs.emplace<B>(entityC, 1337.0f);
 
-  ecs.view<C>().forEach([](const PurrfectEngine::Entity &entity, C &c) {
+  ecs.view<C>(PurrfectEngine::exclude<B>).forEach([](const PurrfectEngine::Entity &entity, C &c) {
     std::cout << entity << ": " << c.value << std::endl;
   });
 
