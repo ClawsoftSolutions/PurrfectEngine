@@ -39,6 +39,8 @@ int main(void) {
   ecs.registerComponent<B>();
   ecs.registerComponent<C>();
 
+  ecs.removeEntity(ecs.create());
+
   const PurrfectEngine::Entity &entityA = ecs.create();
   ecs.emplace<A>(entityA, 69);
   ecs.emplace<C>(entityA, 'A');
@@ -46,6 +48,9 @@ int main(void) {
   const PurrfectEngine::Entity &entityB = ecs.create();
   ecs.emplace<B>(entityB, 420.0f);
   ecs.emplace<C>(entityB, 'B');
+
+  ecs.removeEntity(ecs.create());
+  /*ecs.removeEntity(*/ecs.create()/*)*/;
 
   const PurrfectEngine::Entity &entityC = ecs.create();
   ecs.emplace<C>(entityC, 'C');

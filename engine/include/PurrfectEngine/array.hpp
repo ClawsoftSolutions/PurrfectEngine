@@ -47,6 +47,10 @@ namespace PurrfectEngine {
       other.m_count = 0;
     }
 
+    ~Array() {
+      free(m_items);
+    }
+
     Array<T> &operator =(const Array<T> &other) {
       if (this == &other) return *this;
       if (m_items) free(m_items);

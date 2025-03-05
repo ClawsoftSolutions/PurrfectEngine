@@ -11,7 +11,7 @@ namespace PurrfectEngine {
     static constexpr Index tombstone = UINT32_MAX;
   public:
     virtual void remove(const Index &index) = 0;
-    virtual bool contains(const Index &index) = 0;
+    virtual bool contains(const Index &index) const = 0;
     virtual constexpr Index size() const = 0;
     virtual constexpr const Array<Index> &getSparse() const = 0;
   };
@@ -66,7 +66,8 @@ namespace PurrfectEngine {
     }
 
     void remove(const Index &index) {
-      const Index &denseIndex = m_sparse[index];
+      if (index >= m_sparse.size()) return;
+      Index denseIndex = m_sparse[index];
       if (denseIndex == tombstone) return;
       m_sparse[index] = tombstone;
       m_sparse[m_denseToSparse.back()] = denseIndex;
@@ -98,7 +99,7 @@ namespace PurrfectEngine {
       return m_dense[denseIndex];
     }
 
-    bool contains(const Index &index) {
+    bool contains(const Index &index) const {
       return m_sparse.size() > index && m_sparse[index] != tombstone;
     }
 

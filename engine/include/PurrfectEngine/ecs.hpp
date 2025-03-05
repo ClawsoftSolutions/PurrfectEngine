@@ -2,6 +2,7 @@
 #define   _PURRFECT_ENGINE_ECS_HPP_
 
 #include "sparseSet.hpp"
+#include "queue.hpp"
 
 #include <iostream>
 #include <functional>
@@ -127,7 +128,7 @@ namespace PurrfectEngine {
     template <typename T>
     void insert(const Entity &entity, const T &component = T()) {
       if (entity >= m_entityCounter) throw CodeException(Code::OutOfBounds);
-      if (m_deadEntities.has(entity)) throw CodeException(Code::DeadEntity);
+      if (!m_entityMasks.contains(entity)) throw CodeException(Code::DeadEntity);
 
       m_entityMasks[entity] |= 1 << getComponentPos<T>();
       SparseSet<T> &set = getComponentSet<T>();
@@ -137,7 +138,7 @@ namespace PurrfectEngine {
     template <typename T, typename... Args>
     T &emplace(const Entity &entity, Args &&...args) {
       if (entity >= m_entityCounter) throw CodeException(Code::OutOfBounds);
-      if (m_deadEntities.has(entity)) throw CodeException(Code::DeadEntity);
+      if (!m_entityMasks.contains(entity)) throw CodeException(Code::DeadEntity);
 
       m_entityMasks[entity] |= 1 << getComponentPos<T>();
       SparseSet<T> &set = getComponentSet<T>();
@@ -147,7 +148,7 @@ namespace PurrfectEngine {
     template <typename T>
     constexpr T &get(const Entity &entity) {
       if (entity >= m_entityCounter) throw CodeException(Code::OutOfBounds);
-      if (m_deadEntities.has(entity)) throw CodeException(Code::DeadEntity);
+      if (!m_entityMasks.contains(entity)) throw CodeException(Code::DeadEntity);
       if (!(m_entityMasks[entity] & 1 << getComponentPos<T>())) throw CodeException(Code::OutOfBounds);
 
       SparseSet<T> &set = getComponentSet<T>();
@@ -157,7 +158,7 @@ namespace PurrfectEngine {
     template <typename T>
     constexpr const T &get(const Entity &entity) const {
       if (entity >= m_entityCounter) throw CodeException(Code::OutOfBounds);
-      if (m_deadEntities.has(entity)) throw CodeException(Code::DeadEntity);
+      if (!m_entityMasks.contains(entity)) throw CodeException(Code::DeadEntity);
       if (!(m_entityMasks[entity] & 1 << getComponentPos<T>())) throw CodeException(Code::OutOfBounds);
 
       const SparseSet<T> &set = getComponentSet<T>();
@@ -167,7 +168,7 @@ namespace PurrfectEngine {
     template <typename T>
     void remove(const Entity &entity) {
       if (entity >= m_entityCounter) throw CodeException(Code::OutOfBounds);
-      if (m_deadEntities.has(entity)) throw CodeException(Code::DeadEntity);
+      if (!m_entityMasks.contains(entity)) throw CodeException(Code::DeadEntity);
 
       ComponentMask &mask = m_entityMasks[entity];
       ComponentMask componentMask = 1<<getComponentPos<T>();
@@ -215,7 +216,7 @@ namespace PurrfectEngine {
       return m_componentPools[getComponentPos<T>()];
     }
   private:
-    Array<Entity> m_deadEntities{}; // TODO: Change to Queue
+    Queue<Entity> m_deadEntities{}; // TODO: Done
     SparseSet<ComponentMask, Entity> m_entityMasks{};
     Array<ISparseSet<>*> m_componentPools = Array<ISparseSet<>*>(8);
     Entity m_entityCounter = 0;
