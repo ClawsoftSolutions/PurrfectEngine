@@ -59,5 +59,9 @@ int main(void) {
     std::cout << entity << " (" << c.value << "): " << b.value << std::endl;
   });
 
+  std::cout << "Does entityB have C component? " << ecs.hasAll<C>(entityB) << std::endl;
+  std::cout << "Does entityC have A and C components? " << ecs.hasAll<A, C>(entityC) << std::endl;
+  std::cout << "Does entityA have A or B component? " << ecs.hasAny<A, B>(entityA) << std::endl;
+
   return 0;
 }

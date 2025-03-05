@@ -147,6 +147,18 @@ namespace PurrfectEngine {
       SparseSet<T> &set = getComponentSet<T>();
       set.remove(entity);
     }
+  public: // Has
+    template <typename ...Components>
+    constexpr bool hasAll(const Entity &entity) const {
+      ComponentMask componentsMask = ((1<<getComponentPos<Components>()) | ...);
+      return (m_entityMasks[entity] & componentsMask) == componentsMask;
+    }
+    
+    template <typename ...Components>
+    constexpr bool hasAny(const Entity &entity) const {
+      ComponentMask componentsMask = ((1<<getComponentPos<Components>()) | ...);
+      return (m_entityMasks[entity] & componentsMask);
+    }
   public:
     template <typename ...Components>
     ComponentView<Components...> view() {
@@ -154,7 +166,7 @@ namespace PurrfectEngine {
     }
   private:
     template <typename T>
-    size_t getComponentPos() {
+    size_t getComponentPos() const {
       auto it = m_componentBitPositions.find(typeid(T));
       if (it == m_componentBitPositions.end()) throw CodeException(Code::OutOfBounds);
       return it->second;
