@@ -1,4 +1,5 @@
 #include "PurrfectEngine/ecs.hpp"
+#include "PurrfectEngine/stringView.hpp"
 
 #include <iostream>
 
@@ -67,6 +68,8 @@ int main(void) {
   std::cout << "Does entityB have C component? " << ecs.hasAll<C>(entityB) << std::endl;
   std::cout << "Does entityC have A and C components? " << ecs.hasAll<A, C>(entityC) << std::endl;
   std::cout << "Does entityA have A or B component? " << ecs.hasAny<A, B>(entityA) << std::endl;
+
+  std::cout << PurrfectEngine::StringView("oi!") << std::endl;
 
   return 0;
 }
