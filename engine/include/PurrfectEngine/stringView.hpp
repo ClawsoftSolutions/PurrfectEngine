@@ -6,6 +6,8 @@
 
 namespace PurrfectEngine {
 
+  class StringBuilder;
+
   // If you've been looking at the repo's source code you might've asked yourself "Why does CHP implement every data structure".
   // The answer wasn't clear to me up until @CyberWordPL said that it's "bcz you are C not C++ tf". (Get it? Cuz CHP = C Hating Python... forget it)
   class StringView {
@@ -52,6 +54,8 @@ namespace PurrfectEngine {
 
     friend bool operator ==(const StringView &lhs, const StringView &rhs);
     friend bool operator ==(const StringView &lhs, const char *const &rhs);
+
+    friend StringBuilder &operator <<(StringBuilder &sb, const StringView &sv);
 
     constexpr const char &operator [](const size_t &i) const { return m_data[i]; }
 

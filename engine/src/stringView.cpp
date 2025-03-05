@@ -1,6 +1,7 @@
 #include "PurrfectEngine/stringView.hpp"
 
 #include "PurrfectEngine/result.hpp"
+#include "PurrfectEngine/stringBuilder.hpp"
 
 #include <stdlib.h>
 #include <string.h>
@@ -59,6 +60,10 @@ namespace PurrfectEngine {
 
   bool operator ==(const StringView &lhs, const char *const &rhs) {
     return lhs.m_count == strlen(rhs) && !strncmp(lhs.m_data, rhs, lhs.m_count);
+  }
+
+  StringBuilder &operator <<(StringBuilder &sb, const StringView &sv) {
+    return sb.write(sv.m_data, sv.m_count);
   }
 
 }
