@@ -4,6 +4,7 @@
 #include "result.hpp"
 
 #include <stdlib.h>
+#include <string.h>
 
 namespace PurrfectEngine {
 
