@@ -3,6 +3,8 @@
 
 #include "result.hpp"
 
+#include <stdlib.h>
+
 namespace PurrfectEngine {
 
   template <typename T>

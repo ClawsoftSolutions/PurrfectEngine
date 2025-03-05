@@ -4,7 +4,7 @@
 #include "core.hpp"
 #include "result.hpp"
 
-#include <ostream>
+#include <stdlib.h>
 
 namespace PurrfectEngine {
 

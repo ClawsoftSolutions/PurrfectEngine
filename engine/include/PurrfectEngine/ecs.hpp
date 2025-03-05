@@ -6,8 +6,10 @@
 
 #include <iostream>
 #include <functional>
+#include <algorithm>
 #include <unordered_map>
 #include <typeindex>
+#include <array>
 
 namespace PurrfectEngine {
 
