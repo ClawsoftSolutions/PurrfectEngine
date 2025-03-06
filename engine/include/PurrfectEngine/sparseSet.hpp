@@ -11,6 +11,7 @@ namespace PurrfectEngine {
     static constexpr Index tombstone = UINT32_MAX;
   public:
     virtual void remove(const Index &index) = 0;
+    virtual void clear() = 0;
     virtual bool contains(const Index &index) const = 0;
     virtual constexpr Index size() const = 0;
     virtual constexpr const Array<Index> &getSparse() const = 0;
@@ -74,6 +75,11 @@ namespace PurrfectEngine {
 
       m_dense[denseIndex] = m_dense.back();
       m_denseToSparse[denseIndex] = m_denseToSparse.back();
+    }
+
+    void clear() {
+      m_sparse.clear();
+      m_dense.clear();
     }
 
     T &get(const Index &index) {

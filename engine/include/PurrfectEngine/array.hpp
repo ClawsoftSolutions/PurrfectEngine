@@ -106,7 +106,9 @@ namespace PurrfectEngine {
       return m_items[m_count++];
     }
 
-    void clear() { m_count = 0; }
+    void clear() {
+      while (m_count--) m_items[m_count].~T();
+    }
 
     void remove(size_t index) {
       if (index > --m_count) throw CodeException(Code::OutOfBounds);

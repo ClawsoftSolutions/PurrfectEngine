@@ -69,7 +69,14 @@ int main(void) {
 
   std::cout << "Does entityB have C component? " << ecs.hasAll<C>(entityB) << std::endl;
   std::cout << "Does entityC have A and C components? " << ecs.hasAll<A, C>(entityC) << std::endl;
-  std::cout << "Does entityA have A or B component? " << ecs.hasAny<A, B>(entityA) << std::endl;
+
+  ecs.clear();
+
+  try {
+    std::cout << "Does entityA have A or B component? " << ecs.hasAny<A, B>(entityA) << std::endl;
+  } catch (PurrfectEngine::CodeException ex) {
+    std::cout << ex.what() << std::endl;
+  }
 
   PurrfectEngine::StringView animal = "cat";
 

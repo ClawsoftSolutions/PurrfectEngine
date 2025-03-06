@@ -27,4 +27,12 @@ namespace PurrfectEngine {
     m_entityMasks.remove(entity);
   }
 
+  void ECS::clear() {
+    for (ISparseSet<> *&set : m_componentPools)
+      set->clear();
+    m_entityMasks.clear();
+    m_deadEntities.clear();
+    m_entityCounter = 0;
+  }
+
 }

@@ -20,6 +20,7 @@ namespace PurrfectEngine {
   public:
     Entity create();
     void removeEntity(const Entity &entity);
+    void clear();
   public:
     template <typename T>
     void registerComponent() {
@@ -87,12 +88,18 @@ namespace PurrfectEngine {
   public: // Has
     template <typename ...Components>
     constexpr bool hasAll(const Entity &entity) const {
+      if (entity >= m_entityCounter) throw CodeException(Code::OutOfBounds);
+      if (!m_entityMasks.contains(entity)) throw CodeException(Code::DeadEntity);
+
       ComponentMask componentsMask = ((1<<getComponentPos<Components>()) | ...);
       return (m_entityMasks[entity] & componentsMask) == componentsMask;
     }
 
     template <typename ...Components>
     constexpr bool hasAny(const Entity &entity) const {
+      if (entity >= m_entityCounter) throw CodeException(Code::OutOfBounds);
+      if (!m_entityMasks.contains(entity)) throw CodeException(Code::DeadEntity);
+
       ComponentMask componentsMask = ((1<<getComponentPos<Components>()) | ...);
       return (m_entityMasks[entity] & componentsMask);
     }
@@ -124,7 +131,7 @@ namespace PurrfectEngine {
   private:
     Queue<Entity> m_deadEntities{}; // TODO: Done
     SparseSet<ComponentMask, Entity> m_entityMasks{};
-    Array<ISparseSet<>*> m_componentPools = Array<ISparseSet<>*>(8);
+    Array<ISparseSet<Entity>*> m_componentPools = Array<ISparseSet<>*>(8);
     Entity m_entityCounter = 0;
     std::unordered_map<std::type_index, size_t> m_componentBitPositions{}; // I am too lazy to implement a hash map myself (for now)
   };
