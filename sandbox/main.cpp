@@ -51,8 +51,9 @@ int main(void) {
   ecs.emplace<B>(entityB, 420.0f);
   ecs.emplace<C>(entityB, 'B');
 
-  ecs.removeEntity(ecs.create());
-  /*ecs.removeEntity(*/ecs.create()/*)*/;
+  for (size_t i = 0; i < 10; ++i) {
+    (void)ecs.create();
+  }
 
   const PurrfectEngine::Entity &entityC = ecs.create();
   ecs.emplace<C>(entityC, 'C');

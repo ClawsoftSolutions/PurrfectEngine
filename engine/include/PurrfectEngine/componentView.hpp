@@ -87,9 +87,7 @@ namespace PurrfectEngine {
     void eachImpl(Func func) {
       constexpr auto inds = std::make_index_sequence<sizeof...(Get)>{};
 
-      const Array<Entity> &sparse = m_smallest->getSparse();
-      for (size_t i = 0; i < sparse.size(); ++i) {
-        const Entity &entity = sparse[i];
+      for (const Entity &entity : m_smallest->getSparse()) {
         if (entity == m_smallest->tombstone || !isComplete(entity)) continue;
 
         if constexpr (std::is_invocable_v<Func, Entity, Get &...>) {

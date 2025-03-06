@@ -11,6 +11,30 @@ namespace PurrfectEngine {
   template <typename T>
   class Array {
   public:
+    class Iterator {
+    public:
+      explicit Iterator(T *ptr)
+        : m_ptrValue(ptr)
+      {}
+
+      T &operator *() const { return *m_ptrValue; }
+
+      Iterator &operator++() {
+        return (++m_ptrValue, *this);
+      }
+
+      Iterator operator++(int) {
+        Iterator temp = *this;
+        ++(*this);
+        return temp;
+      }
+
+      constexpr bool operator==(const Iterator& other) const { return m_ptrValue == other.m_ptrValue; }
+      constexpr bool operator!=(const Iterator& other) const { return m_ptrValue != other.m_ptrValue; }
+    private:
+      T *m_ptrValue;
+    };
+  public:
     constexpr Array()
     {}
 
@@ -149,6 +173,12 @@ namespace PurrfectEngine {
 
     constexpr size_t size() const { return m_count; }
     constexpr size_t capacity() const { return m_capacity; }
+
+    Iterator begin() { return Iterator(m_items); }
+    Iterator end() { return Iterator(m_items+m_count); }
+
+    constexpr Iterator begin() const { return Iterator(m_items); }
+    constexpr Iterator end() const { return Iterator(m_items+m_count); }
   private:
     T *m_items = nullptr;
     size_t m_capacity = 0;
